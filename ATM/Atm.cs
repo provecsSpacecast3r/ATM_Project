@@ -33,16 +33,21 @@ namespace FirstProject.ATM
         try
         {
             amount = Convert.ToInt32(Console.ReadLine());
-            controller = true;
+
+            if (amount < 0)
+            {
+              Console.Write("mistyped input, try again: ");
+              controller = false;
+            }else {controller = true;}
         }catch(Exception err)
           {
-            if (err != null)
+            if (err != null || amount < 0)
             {
               Console.Write("mistyped input, try again: ");
               controller = false;
             }
           }
-      }while (!controller || amount < 0);
+      }while (!controller);
 
       Console.WriteLine(input.getBalance());
       var convertedBalance = Convert.ToInt64(input.getBalance());
@@ -61,14 +66,14 @@ namespace FirstProject.ATM
           var updatedBalance = convertedBalance - amount;
           input.updateBalance(updatedBalance.ToString());
           input.updateTrasactionRegister($"Activity on {onActivity}: withdraw of {amount}");
-          Console.WriteLine($"your new balance is {input.getBalance()}");
+          Console.WriteLine($"\nyour new balance is {input.getBalance()}");
         }
       }
     }
 
     public void CashAvaiability(ATMCard input)
     {
-      Console.WriteLine($"your actual balance is {input.getBalance()}");
+      Console.WriteLine($"\nyour actual balance is {input.getBalance()}");
     }
 
     public void LastTransactions(ATMCard input)
@@ -90,46 +95,55 @@ namespace FirstProject.ATM
     {
       var scelta = 0;
       bool controller = true;
-      Menu.options();
-      do
+      if(Logging(foo, input))
       {
-          try
-          {
-            scelta = Convert.ToByte(Console.ReadLine());
-            controller = true;
-          }catch(Exception err)
-            {
-              if (err != null)
-              {
-                Console.Write("mistyped input, try again: ");
-                controller = false;
-              }
-            }
-      }while(!controller || (scelta < 0 || scelta > 2));
-
-        switch (scelta)
+        Menu.options();
+        do
         {
-          case 1:
+            try
+            {
+              scelta = Convert.ToByte(Console.ReadLine());
+  
+              if ( scelta < 0 || scelta > 2 )
+              {
+                Console.Write("\nmistyped input, try again: ");
+                controller = false;
+              }else {controller = true;}
+              
+            }catch(Exception err)
+              {
+                if (err != null)
+                {
+                  Console.Write("\nmistyped input, try again: ");
+                  controller = false;
+                }
+              }
+        }while(!controller);
+  
+          switch (scelta)
           {
-            Withdraw(foo, input);
-            System.Threading.Thread.Sleep(5000);
-            Console.Clear();
-            return true;
-          }  
-          case 2:
-          {
-            CashAvaiability(input);
-            System.Threading.Thread.Sleep(5000);
-            Console.Clear();
-            return true;
+            case 1:
+            {
+              Withdraw(foo, input);
+              System.Threading.Thread.Sleep(5000);
+              Console.Clear();
+              return true;
+            }  
+            case 2:
+            {
+              CashAvaiability(input);
+              System.Threading.Thread.Sleep(5000);
+              Console.Clear();
+              return true;
+            }
+            case 0:
+            {
+              Console.Clear();
+              return false;
+            }
+            default: {return false;}       
           }
-          case 0:
-          {
-            Console.Clear();
-            return false;
-          }
-          default: {return false;}       
-        }
-      }
+        }else{return false;}
+    }
   }
 }

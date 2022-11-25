@@ -29,7 +29,12 @@ namespace FirstProject.Persons
         try
         {
           Convert.ToInt32(buffer);
-          controller = true;
+
+          if (buffer.Length != 5)
+            {
+              Console.Write("mistyped input, try again: ");
+              controller = false;
+            }else {controller = true;}
         }catch (Exception err)
         {
           if (err != null)
@@ -38,7 +43,7 @@ namespace FirstProject.Persons
             controller = false;
           }
         }
-      }while(!controller || buffer.Length != 5);
+      }while(!controller);
 
       
       return buffer;
